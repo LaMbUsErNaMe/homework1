@@ -93,6 +93,8 @@ public class Main {
         Car car = new Car("Toyota", 120, 50);
         Truck truck = new Truck("Volvo", 80, 100, 500);
 
+        System.out.println("for pr");
+
         car.drive();
         car.refuel(20);
         car.drive();
