@@ -1,109 +1,66 @@
-interface Fuelable {
-    void refuel(int amount);
-}
-
-interface Loadable {
-    void loadCargo(int weight);
-}
-
-abstract class Vehicle {
-
-    protected String model;
-    protected int speed;
-
-    private static int vehicleCount = 0;
-
-    public Vehicle(String model, int speed) {
-        this.model = model;
-        this.speed = speed;
-        vehicleCount++;
-    }
-
-    public static int getVehicleCount() {
-        return vehicleCount;
-    }
-
-    public abstract void drive();
-
-    public void displayInfo() {
-        System.out.println("Model: " + model + ", Speed: " + speed + " km/h");
-    }
-}
-
-class Car extends Vehicle implements Fuelable {
-    private int fuelLevel;
-
-    public Car(String model, int speed, int fuelLevel) {
-        super(model, speed);
-        this.fuelLevel = fuelLevel;
-    }
-
-    @Override
-    public void drive() {
-        if (fuelLevel > 0) {
-            System.out.println(model + " is driving at " + speed + " km/h");
-            fuelLevel -= 10;
-        } else {
-            System.out.println("Not enough fuel to drive.");
-        }
-    }
-
-    @Override
-    public void refuel(int amount) {
-        fuelLevel += amount;
-        System.out.println(model + " refueled by " + amount + " liters. Current fuel level: " + fuelLevel);
-    }
-}
-
-class Truck extends Vehicle implements Fuelable, Loadable {
-    private int fuelLevel;
-    private int cargoWeight;
-
-    public Truck(String model, int speed, int fuelLevel, int cargoWeight) {
-        super(model, speed);
-        this.fuelLevel = fuelLevel;
-        this.cargoWeight = cargoWeight;
-    }
-
-    @Override
-    public void drive() {
-        if (fuelLevel > 0) {
-            System.out.println(model + " is driving at " + speed + " km/h with cargo weight: " + cargoWeight + " kg");
-            fuelLevel -= 15;
-        } else {
-            System.out.println("Not enough fuel to drive.");
-        }
-    }
-
-    @Override
-    public void refuel(int amount) {
-        fuelLevel += amount;
-        System.out.println(model + " refueled by " + amount + " liters. Current fuel level: " + fuelLevel);
-    }
-
-    @Override
-    public void loadCargo(int weight) {
-        cargoWeight += weight;
-        System.out.println(model + " loaded with " + weight + " kg. Current cargo weight: " + cargoWeight);
-    }
-}
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        Car car = new Car("Toyota", 120, 50);
-        Truck truck = new Truck("Volvo", 80, 100, 500);
+        List<Student> students = new ArrayList<>();
 
-        System.out.println("for pr");
+        Map<String, Integer> grades1 = new HashMap<>();
+        grades1.put("Математика", 4);
+        grades1.put("Физика", 3);
+        grades1.put("Химия", 5);
+        students.add(new Student("Алиса", "A1", 1, grades1));
 
-        car.drive();
-        car.refuel(20);
-        car.drive();
+        Map<String, Integer> grades2 = new HashMap<>();
+        grades2.put("Математика", 2);
+        grades2.put("Физика", 2);
+        grades2.put("Информатика", 3);
+        students.add(new Student("Вася", "A1", 1, grades2));
 
-        truck.drive();
-        truck.refuel(50);
-        truck.loadCargo(200);
-        truck.drive();
+        Map<String, Integer> grades3 = new HashMap<>();
+        grades3.put("Математика", 5);
+        grades3.put("Литература", 4);
+        grades3.put("История", 4);
+        students.add(new Student("Мария", "A1", 1, grades3));
 
-        System.out.println("Total vehicles created: " + Vehicle.getVehicleCount());
+        Map<String, Integer> grades4 = new HashMap<>();
+        grades4.put("Физика", 3);
+        grades4.put("Информатика", 3);
+        grades4.put("Биология", 2);
+        students.add(new Student("Петр", "A1", 1, grades4));
+
+        Map<String, Integer> grades5 = new HashMap<>();
+        grades5.put("Математика", 5);
+        grades5.put("Физика", 4);
+        grades5.put("Химия", 4);
+        grades5.put("Информатика", 5);
+        students.add(new Student("Ольга", "A1", 1, grades5));
+
+        removeLowScoringStudents(students);
+
+        advanceStudentsToNextCourse(students);
+
+        printStudents(students, 2);
+    }
+
+    public static void removeLowScoringStudents(List<Student> students) {
+        students.removeIf(student -> student.getAverageGrade() < 3);
+    }
+
+    public static void advanceStudentsToNextCourse(List<Student> students) {
+        for (Student student : students) {
+            if (student.getAverageGrade() >= 3) {
+                student.setCourse(student.getCourse() + 1);
+            }
+        }
+    }
+
+    public static void printStudents(List<Student> students, int course) {
+        System.out.println("Студенты на курсе " + course + ":");
+        students.stream()
+                .filter(student -> student.getCourse() == course)
+                .forEach(student -> System.out.println(student.getName()));
     }
 }
